@@ -1,2 +1,2 @@
-# Curso #6 Poo JavaScript
+# Poo JavaScript
 App products
