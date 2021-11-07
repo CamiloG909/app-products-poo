@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#1CCC5B" />
+	<link rel="stylesheet" href="styles/css/styles.css">
+	<link rel="shortcut icon" href="assets/icon/favicon.ico" type="image/x-icon">
+	<title>Add products LS</title>
+</head>
+
+<body>
+	<header class="header">
+		<figure class="header__img">
+			<img src="assets/img/logo.png" alt="Logo header">
+		</figure>
+		<p class="header__title">App products</p>
+	</header>
+	<main class="index-main">
+		<section class="list-products-container">
+			<aside class="index-aside">
+				<div class="card-add">
+					<section class="card-add__header">
+						<p class="card-add__title">Add new product</p>
+					</section>
+					<form action="" id="card-add__form" class="card-add__form">
+						<input type="text" name="product-name" id="product-name" class="card-add__input"
+							placeholder="Product Name" />
+						<input type="number" name="product-price" id="product-price" class="card-add__input"
+							placeholder="Product Price" />
+						<input type="number" value="2021" min="2000" max="2021" name="product-year" id="product-year"
+							class="card-add__input" placeholder="Year Product" />
+						<button id="card-add__btn" class="card-add__btn">
+							<i class="bi bi-save"></i> Save
+						</button>
+					</form>
+				</div>
+			</aside>
+			<section id="index-section-products" class="index-section-products">
+			</section>
+		</section>
+	</main>
+
+	<script src="js/app.js"></script>
+</body>
+
+</html>
