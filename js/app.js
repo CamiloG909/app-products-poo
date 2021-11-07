@@ -1,5 +1,8 @@
+let products = [];
+
 class DetailsProduct {
-	constructor(name, price, year) {
+	constructor(id, name, price, year) {
+		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.year = year;
@@ -8,34 +11,30 @@ class DetailsProduct {
 
 class UI {
 	// Add a new Product
-	addProduct(product) {
+	addProduct(products) {
 		const productList = document.getElementById("index-section-products");
-		const element = document.createElement("article");
-		element.className = "product-card";
-		element.innerHTML = `
-		<p class="product-card__info">
-			<b>Product: </b>${product.name}
-			</p>
+		productList.innerHTML = "";
+		products.forEach((product) => {
+			const element = document.createElement("article");
+			element.className = "product-card";
+			element.innerHTML = `
 			<p class="product-card__info">
-			<b>Price: </b>${product.price}
+				<b>Product: </b>${product.name}
+				</p>
+				<p class="product-card__info">
+				<b>Price: </b>${product.price}
+				</p>
+				<p class="product-card__info">
+				<b>Year: </b>${product.year}
 			</p>
-			<p class="product-card__info">
-			<b>Year: </b>${product.year}
-		</p>
-		<button name="delete" class="product-card__btn"><i name="delete-icon" class="bi bi-trash2-fill"></i> Delete</button>
-        `;
-		productList.appendChild(element);
+			<button data-id="${product.id}" name="delete" class="product-card__btn"><i class="bi bi-trash2-fill"></i> Delete</button>
+					`;
+			productList.appendChild(element);
+		});
 	}
 
 	resetForm() {
 		document.querySelector("#card-add__form").reset();
-	}
-
-	deleteProduct(element) {
-		if (element.name === "delete") {
-			element.parentElement.remove();
-			this.showMessage("Product deleted", "red");
-		}
 	}
 
 	showMessage(message, type = "green") {
@@ -54,7 +53,32 @@ class UI {
 	}
 }
 
-document.getElementById("card-add__form").addEventListener("submit", (e) => {
+class LS {
+	getProducts() {
+		if (localStorage.getItem("products") === null) {
+			localStorage.setItem("products", JSON.stringify(products));
+		} else {
+			const ui = new UI();
+			products = JSON.parse(localStorage.getItem("products"));
+			ui.addProduct(products);
+		}
+	}
+	deleteProduct(id) {
+		products = products.filter((product) => product.id != id);
+		this.syncProducts();
+	}
+	syncProducts() {
+		const ui = new UI();
+		ui.addProduct(products);
+		localStorage.setItem("products", JSON.stringify(products));
+	}
+}
+
+const ls = new LS();
+// Get products from local storage
+window.addEventListener("DOMContentLoaded", ls.getProducts());
+
+document.querySelector("#card-add__form").addEventListener("submit", (e) => {
 	// Override the default Form behaviour
 	e.preventDefault();
 
@@ -64,7 +88,7 @@ document.getElementById("card-add__form").addEventListener("submit", (e) => {
 	const year = document.getElementById("product-year").value;
 
 	// Create a new Oject Product
-	const product = new DetailsProduct(name, price, year);
+	const product = new DetailsProduct(Date.now(), name, price, year);
 
 	// Create a new UI instance
 	const ui = new UI();
@@ -83,14 +107,18 @@ document.getElementById("card-add__form").addEventListener("submit", (e) => {
 	}
 
 	// Save Product
-	ui.addProduct(product);
+	products.push(product);
+	ls.syncProducts();
 	ui.showMessage("Product added");
 	ui.resetForm();
 });
 
+// Delete product btn
 document
 	.querySelector("#index-section-products")
 	.addEventListener("click", (e) => {
-		const ui = new UI();
-		ui.deleteProduct(e.target);
+		if (e.target.name === "delete") {
+			const id = e.target.getAttribute("data-id");
+			ls.deleteProduct(id);
+		}
 	});
