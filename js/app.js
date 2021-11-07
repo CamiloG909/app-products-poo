@@ -64,7 +64,9 @@ class LS {
 		}
 	}
 	deleteProduct(id) {
+		const ui = new UI();
 		products = products.filter((product) => product.id != id);
+		ui.showMessage('Deleted product', 'red');
 		this.syncProducts();
 	}
 	syncProducts() {
